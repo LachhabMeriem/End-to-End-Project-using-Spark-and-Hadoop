@@ -1,0 +1,20 @@
+spark-submit   --master local[*]   --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1   weathermonitoring_streaming.py
+
+CREATE EXTERNAL TABLE IF NOT EXISTS weather_table (
+    CityName STRING,
+    Temperature DOUBLE,
+    Humidity INT,
+    CreationTime STRING,
+    CreationDate DATE
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+LOCATION '/data/weather_detail/';
+
+
+connect 'jdbc:derby://localhost:1527/metastore_db';
+run 'C:/hive/scripts/metastore/upgrade/derby/hive-schema-2.3.0.derby.sql';
+
+
+spark-submit --files C:/hive/conf/hive-site.xml --py-files <List_of_Pyfiles> 
